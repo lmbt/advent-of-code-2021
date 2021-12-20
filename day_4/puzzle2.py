@@ -5,8 +5,6 @@ def scanLineForWin(line, answers):
   for num in line:
     if num in answers:
       count = count + 1
-  if count == 5:
-    print(line)
   return count == 5
 
 def scanRowsForWin(board, answers):
@@ -67,6 +65,7 @@ if __name__ == '__main__':
           # extend current puzzle board
           boards[counter].append(split_data)
 
+  ignored_boards = []
   # Make a new answer available each cycle
   for i in range(0, len(answers)):
     # Check all combinations of all boards to see if any are winners
@@ -74,6 +73,12 @@ if __name__ == '__main__':
       board = boards[b]
       ans = answers[0:i]
       if checkBoardForWin(board, ans):
-        print('Winner: Board #' + str(b + 1) + ' and answers 0 through ' + str(i))
-        print('score is: ' + str(calculateScore(board, ans)))
-        sys.exit(0)
+        if b not in ignored_boards:
+          if len(ignored_boards) == len(boards) - 1:
+            # Found last board
+            print('Last winning board: ' + str(b))
+            print('score is: ' + str(calculateScore(board, ans)))
+            sys.exit(0)
+          else:
+            ignored_boards.append(b)
+
